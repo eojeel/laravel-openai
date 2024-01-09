@@ -31,6 +31,6 @@ return [
         'region' => env('AWS_DEFAULT_REGION', 'us-east-1'),
     ],
     'openai' => [
-        'secret' => env('OPENAI_SECRET'),
+        'secret' => env('OPENAI_API_KEY'),
     ],
 ];

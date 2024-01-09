@@ -10,6 +10,6 @@ Route::get('/', function () {
     $poem = $chat->send('Compose a poem that explains the concept of recursion in programming.');
 
     return view('welcome', [
-        'poem' => $poem
+        'poem' => $poem,
     ]);
 });
