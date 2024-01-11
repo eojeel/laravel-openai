@@ -33,11 +33,11 @@ class ChatCommand extends Command
 
         $chat = new Chat();
 
-        if($system = $this->option('system')) {
+        if ($system = $this->option('system')) {
             $chat->systemMessage($system);
         }
 
-        $question = text(label:'What is your question?', required: true);
+        $question = text(label: 'What is your question?', required: true);
 
         $response = spin(fn () => $chat->send($question), 'Fetching Response...');
 
