@@ -71,3 +71,25 @@ Route::post('image', function () {
         'url' => $url,
     ]);
 });
+
+Route::get('comment', function () {
+    return view('comment');
+});
+
+Route::post('comment', function() {
+
+    $validate = request()->validate([
+        'comment' => 'required|min:5'
+    ]);
+
+    $chat = new Assistant([
+        [
+        'content' => 'You are a forum moderator',
+        'role' => 'system'
+        ]
+    ]);
+
+    $response = $chat->send('Please inspect the following text to determine if its spam. \n\n'.$validate['comment']);
+
+
+});
