@@ -3,6 +3,7 @@
 namespace App\AI;
 
 use OpenAI\Laravel\Facades\OpenAI;
+use Illuminate\Validation\ValidationException;
 
 class Assistant
 {
@@ -47,7 +48,7 @@ class Assistant
         $this->addMessage($message);
 
         $response = OpenAI::chat()->create([
-            'model' => 'gpt-3.5-turbo',
+            'model' => 'gpt-3.5-turbo-1106',
             'messages' => $this->messages,
         ])->choices[0]->message->content;
 
@@ -56,6 +57,31 @@ class Assistant
         }
 
         return $speech ? $this->speech($response) : $response;
+    }
+
+    public function sendJSON(string $message)
+    {
+        $this->addMessage("<<EOT Please inspect the follolwing text to determin if its spam {$message}
+
+            Expected response
+
+            {'is_spam: true|false'}
+
+            EOT", 'user');
+
+        $response = OpenAI::chat()->create([
+            'model' => 'gpt-4-1106-preview',
+            'messages' => $this->messages,
+            'response_format' => ['type' => 'json_object'],
+        ])->choices[0]->message->content;
+
+        $response = json_decode($response);
+
+        if ($response->is_spam) {
+            throw ValidationException::withMessages(['body' => 'Spam Detected']);
+        }
+
+        return 'Post is valid';
     }
 
     private function speech(string $message): string

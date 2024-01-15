@@ -27,6 +27,15 @@
                     class="text-sm font-semibold absolute bg-[#4F46E5] w-fit text-white py-2 rounded px-3">Post</button>
             </div>
         </form>
+        <div>
+            @if ($errors->any())
+            <ul class="mt-2">
+            @foreach($errors->all() as $error)
+                <div class="text-red-500">{{ $error }}</div>
+            @endforeach
+            </ul>
+        @endif
+        </div>
     </div>
 </body>
 

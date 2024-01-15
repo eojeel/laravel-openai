@@ -76,20 +76,20 @@ Route::get('comment', function () {
     return view('comment');
 });
 
-Route::post('comment', function() {
+Route::post('comment', function () {
 
     $validate = request()->validate([
-        'comment' => 'required|min:5'
+        'comment' => 'required|min:5|string',
     ]);
 
     $chat = new Assistant([
         [
-        'content' => 'You are a forum moderator',
-        'role' => 'system'
-        ]
+            'content' => 'You are a forum moderator designed to output JSON',
+            'role' => 'system',
+        ],
     ]);
 
-    $response = $chat->send('Please inspect the following text to determine if its spam. \n\n'.$validate['comment']);
+    $response = $chat->sendJSON($validate['comment']);
 
-
+    dd($response);
 });
