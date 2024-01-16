@@ -2,8 +2,8 @@
 
 namespace App\AI;
 
-use OpenAI\Laravel\Facades\OpenAI;
 use Illuminate\Validation\ValidationException;
+use OpenAI\Laravel\Facades\OpenAI;
 
 class Assistant
 {
@@ -11,7 +11,7 @@ class Assistant
 
     public function __construct(array $messages = [])
     {
-        $this->messages = $messages;
+        $this->messages[] = $messages;
     }
 
     /**
