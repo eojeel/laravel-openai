@@ -15,6 +15,10 @@ return [
     'api_key' => env('OPENAI_API_KEY'),
     'organization' => env('OPENAI_ORGANIZATION'),
 
+    'assistants' => [
+        'id' => env('OPENAI_ASSISTANT_ID')
+    ],
+
     /*
     |--------------------------------------------------------------------------
     | Request Timeout

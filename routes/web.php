@@ -1,6 +1,7 @@
 <?php
 
 use App\AI\Assistant;
+use App\AI\AssistantHelper;
 use Illuminate\Support\Facades\Route;
 use OpenAI\Laravel\Facades\OpenAI;
 
@@ -94,43 +95,13 @@ Route::post('comment', function () {
 
 Route::get('assistant', function () {
 
-    $file = OpenAI::files()->upload([
-        'purpose' => 'assistants',
-        'file' => fopen(storage_path('docs/parse.md'), 'rb'),
-    ]);
+    $assistant = new AssistantHelper(config('openai.assistants.id'));
 
-    $assistant = OpenAI::assistants()->create([
-        'name' => 'LaraParse Assistant',
-        'instructions' => 'You are a helpfull programming assistant',
-        'model' => 'gpt-4-1106-preview',
-        'tools' => [
-            [
-                'type' => 'retrieval',
-            ],
-        ],
-        'file_ids' => [
-            $file->id,
-        ],
-    ]);
-
-    $run = OpenAI::threads()->createAndRun([
-        'assistant_id' => $assistant->id,
-        'thread' => [
-            'messages' => [
-                ['role' => 'user', 'content' => 'How do I parse the first paragraph?'],
-            ],
-        ],
-    ]);
-
-    do {
-        sleep(1);
-        $run = OpenAI::threads()->runs()->retrieve(
-            threadId: $run->threadId,
-            runId: $run->id
-        );
-    } while ($run->status != 'completed');
-
-    $messages = OpenAI::threads()->messages()->list($run->threadId);
+    $messages = $assistant->createThread()
+    ->write('Hello!')
+    ->write('How do I parse the first paragraph?')
+    ->send();
 
     dd($messages);
+
 });
